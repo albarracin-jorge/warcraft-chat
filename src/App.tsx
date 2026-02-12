@@ -14,7 +14,7 @@ import { Button } from './components/ui/warcraftcn/button'
 function App() {
 
   return (
-    <>
+    <main className="flex min-h-screen flex-col items-center justify-between p-24">
     <Card>
       <CardHeader >
         <CardTitle>Card Title</CardTitle>
@@ -27,8 +27,8 @@ function App() {
         <p>Card footer</p>
       </CardFooter>
     </Card>
-    <Button>Ask</Button>
-    </>
+    <Button variant='frame' className='p-4 px-24'>Ask</Button>
+    </main>
   )
 }
 
