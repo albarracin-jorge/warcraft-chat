@@ -2,8 +2,8 @@ import "dotenv/config";
 import { serve } from "@hono/node-server";
 import { Hono } from "hono";
 import { cors } from "hono/cors";
-import { streamText } from "ai";
-import { A } from "@ai-sdk/";
+import { streamText, convertToModelMessages } from "ai";
+import { anthropic } from "@ai-sdk/anthropic";
 
 const app = new Hono();
 
@@ -32,10 +32,12 @@ app.post("/api/chat", async (c) => {
   const body = await c.req.json();
   const { messages } = body;
 
+  const modelMessages = await convertToModelMessages(messages);
+
   const result = streamText({
-    model: openai("gpt-4o-mini"),
+    model: anthropic("claude-haiku-4-5-20251001"),
     system: ORC_SYSTEM_PROMPT,
-    messages,
+    messages: modelMessages,
   });
 
   return result.toUIMessageStreamResponse();
