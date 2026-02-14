@@ -26,7 +26,7 @@ function getMessageText(msg: { parts: Array<{ type: string; text?: string }> }):
 }
 
 const transport = new DefaultChatTransport({
-  api: "http://localhost:3001/api/chat",
+  api: "/api/chat",
 });
 
 export function ChatView({ playerName, onBack }: ChatViewProps) {

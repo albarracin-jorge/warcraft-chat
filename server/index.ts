@@ -1,13 +1,16 @@
 import "dotenv/config";
 import { serve } from "@hono/node-server";
+import { serveStatic } from "@hono/node-server/serve-static";
 import { Hono } from "hono";
 import { cors } from "hono/cors";
 import { streamText, convertToModelMessages } from "ai";
 import { anthropic } from "@ai-sdk/anthropic";
+import path from "path";
+import fs from "fs";
 
 const app = new Hono();
 
-app.use("/*", cors());
+app.use("/api/*", cors());
 
 const ORC_SYSTEM_PROMPT = `You are Grom'thar, a fierce and battle-hardened Orc warrior from the Horde in the World of Warcraft universe. You speak with the rough, direct, and passionate manner typical of Orcs.
 
@@ -43,6 +46,17 @@ app.post("/api/chat", async (c) => {
   return result.toUIMessageStreamResponse();
 });
 
-const port = 3001;
+// Serve static frontend in production
+const distPath = path.resolve(import.meta.dirname, "../dist");
+if (fs.existsSync(distPath)) {
+  app.use("/*", serveStatic({ root: "./dist" }));
+  // SPA fallback: serve index.html for any non-API, non-file route
+  app.get("*", (c) => {
+    const indexHtml = fs.readFileSync(path.join(distPath, "index.html"), "utf-8");
+    return c.html(indexHtml);
+  });
+}
+
+const port = Number(process.env.PORT) || 3001;
 console.log(`⚔️  Orc server ready on port ${port}. Lok'tar Ogar!`);
 serve({ fetch: app.fetch, port });
