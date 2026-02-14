@@ -1,35 +1,17 @@
 
 import './App.css'
-import { 
-  Card, 
-  CardHeader, 
-  CardTitle, 
-  CardDescription, 
-  CardContent, 
-  // CardAction, 
-  CardFooter 
-} from '@/components/ui/warcraftcn/card'
-import { Button } from './components/ui/warcraftcn/button'
+import { useState } from 'react'
+import { WelcomeScreen } from '@/components/WelcomeScreen'
+import { ChatView } from '@/components/ChatView'
 
 function App() {
+  const [playerName, setPlayerName] = useState<string | null>(null)
 
-  return (
-    <main className="flex min-h-screen flex-col items-center justify-between p-24">
-    <Card>
-      <CardHeader >
-        <CardTitle>Card Title</CardTitle>
-        <CardDescription>Card description</CardDescription>
-      </CardHeader>
-      <CardContent>
-        <p>Card content goes here.</p>
-      </CardContent>
-      <CardFooter>
-        <p>Card footer</p>
-      </CardFooter>
-    </Card>
-    <Button variant='frame' className='p-4 px-24'>Ask</Button>
-    </main>
-  )
+  if (!playerName) {
+    return <WelcomeScreen onEnter={setPlayerName} />
+  }
+
+  return <ChatView playerName={playerName} onBack={() => setPlayerName(null)} />
 }
 
 export default App
