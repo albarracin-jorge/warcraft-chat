@@ -4,20 +4,39 @@ import { useEffect, useState } from 'react'
 import { WelcomeScreen } from '@/components/WelcomeScreen'
 import { ChatView } from '@/components/ChatView'
 import { fetchCsrfToken } from './lib/csrf'
+import type { Race } from './lib/races'
 
 function App() {
   const [playerName, setPlayerName] = useState<string | null>(null)
+  const [playerRace, setPlayerRace] = useState<Race>("orc")
+  const [chatRace, setChatRace] = useState<Race>("orc")
   const [csrfToken, setCsrfToken] = useState<string | null>(null);
+
   useEffect(() => {
-    console.log('c ejecuta');
-    
     fetchCsrfToken().then(setCsrfToken);
   }, []);
+
   if (!playerName) {
-    return <WelcomeScreen onEnter={setPlayerName} />
+    return (
+      <WelcomeScreen
+        onEnter={(name, race, npcRace) => {
+          setPlayerName(name)
+          setPlayerRace(race)
+          setChatRace(npcRace)
+        }}
+      />
+    )
   }
 
-  return <ChatView playerName={playerName} csrfToken={csrfToken} onBack={() => setPlayerName(null)} />
+  return (
+    <ChatView
+      playerName={playerName}
+      playerRace={playerRace}
+      chatRace={chatRace}
+      csrfToken={csrfToken}
+      onBack={() => setPlayerName(null)}
+    />
+  )
 }
 
 export default App

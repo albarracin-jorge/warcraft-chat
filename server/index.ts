@@ -9,9 +9,16 @@ import { anthropic } from "@ai-sdk/anthropic";
 import crypto from "crypto";
 import path from "path";
 import fs from "fs";
-import { ORC_SYSTEM_PROMPT } from "./prompts.ts";
+import { ORC_SYSTEM_PROMPT, HUMAN_SYSTEM_PROMPT, TROL_SYSTEM_PROMPT, DWARF_SYSTEM_PROMPT } from "./prompts.ts";
 
 const app = new Hono();
+
+const RACE_PROMPTS: Record<string, string> = {
+  orc: ORC_SYSTEM_PROMPT,
+  human: HUMAN_SYSTEM_PROMPT,
+  troll: TROL_SYSTEM_PROMPT,
+  dwarf: DWARF_SYSTEM_PROMPT,
+};
 
 const ALLOWED_ORIGIN = process.env.ALLOWED_ORIGIN || "http://localhost:5173";
 
@@ -41,13 +48,15 @@ app.post("/api/chat", async (c) => {
   }
 
   const body = await c.req.json();
-  const { messages } = body;
+  const { messages, race } = body;
+
+  const systemPrompt = RACE_PROMPTS[race] ?? ORC_SYSTEM_PROMPT;
 
   const modelMessages = await convertToModelMessages(messages);
 
   const result = streamText({
     model: anthropic("claude-haiku-4-5-20251001"),
-    system: ORC_SYSTEM_PROMPT,
+    system: systemPrompt,
     messages: modelMessages,
   });
 

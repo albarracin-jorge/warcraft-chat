@@ -8,20 +8,23 @@ import {
 } from "@/components/ui/warcraftcn/card";
 import { Button } from "@/components/ui/warcraftcn/button";
 import { Input } from "@/components/ui/warcraftcn/input";
+import { RACE_LIST, type Race } from "@/lib/races";
 import "@/components/ui/warcraftcn/styles/warcraft.css";
 
 interface WelcomeScreenProps {
-  onEnter: (name: string) => void;
+  onEnter: (name: string, playerRace: Race, chatRace: Race) => void;
 }
 
 export function WelcomeScreen({ onEnter }: WelcomeScreenProps) {
   const [name, setName] = useState("");
+  const [playerRace, setPlayerRace] = useState<Race>("orc");
+  const [chatRace, setChatRace] = useState<Race>("orc");
   const inputRef = useRef<HTMLInputElement>(null);
 
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
     if (name.trim()) {
-      onEnter(name.trim());
+      onEnter(name.trim(), playerRace, chatRace);
     }
   };
 
@@ -34,11 +37,12 @@ export function WelcomeScreen({ onEnter }: WelcomeScreenProps) {
             Warcraft Chat
           </CardTitle>
           <CardDescription className="text-amber-100/60 mt-1">
-            Speak with Grom'thar, Warrior of the Horde
+            Choose your identity and who to speak with
           </CardDescription>
         </CardHeader>
         <CardContent className="px-6 pb-2">
-          <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+          <form onSubmit={handleSubmit} className="flex flex-col gap-5">
+            {/* Name input */}
             <div className="space-y-2">
               <label
                 htmlFor="playerName"
@@ -56,6 +60,67 @@ export function WelcomeScreen({ onEnter }: WelcomeScreenProps) {
                 autoFocus
               />
             </div>
+
+            {/* Player race selection */}
+            <div className="space-y-2">
+              <label className="fantasy text-amber-200/80 text-sm block text-center">
+                Your avatar
+              </label>
+              <div className="flex justify-center gap-3">
+                {RACE_LIST.map((race) => (
+                  <button
+                    key={race.id}
+                    type="button"
+                    onClick={() => setPlayerRace(race.id)}
+                    className={`relative flex flex-col items-center gap-1 p-2 rounded-lg transition-all cursor-pointer ${
+                      playerRace === race.id
+                        ? "ring-2 ring-amber-400 bg-amber-900/40 scale-110"
+                        : "opacity-50 hover:opacity-80 hover:bg-amber-900/20"
+                    }`}
+                  >
+                    <img
+                      src={race.icon}
+                      alt={race.name}
+                      className="w-12 h-12 rounded-full border-2 border-amber-700/50 object-cover"
+                    />
+                    <span className="fantasy text-amber-200/80 text-[10px]">
+                      {race.name}
+                    </span>
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* NPC race selection */}
+            <div className="space-y-2">
+              <label className="fantasy text-amber-200/80 text-sm block text-center">
+                Speak with
+              </label>
+              <div className="flex justify-center gap-3">
+                {RACE_LIST.map((race) => (
+                  <button
+                    key={race.id}
+                    type="button"
+                    onClick={() => setChatRace(race.id)}
+                    className={`relative flex flex-col items-center gap-1 p-2 rounded-lg transition-all cursor-pointer ${
+                      chatRace === race.id
+                        ? "ring-2 ring-red-400 bg-red-900/40 scale-110"
+                        : "opacity-50 hover:opacity-80 hover:bg-red-900/20"
+                    }`}
+                  >
+                    <img
+                      src={race.icon}
+                      alt={race.name}
+                      className="w-12 h-12 rounded-full border-2 border-red-700/50 object-cover"
+                    />
+                    <span className="fantasy text-amber-200/80 text-[10px]">
+                      {race.name}
+                    </span>
+                  </button>
+                ))}
+              </div>
+            </div>
+
             <Button
               type="submit"
               variant="frame"
