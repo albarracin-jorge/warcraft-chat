@@ -15,6 +15,7 @@ import "@/components/ui/warcraftcn/styles/warcraft.css";
 
 interface ChatViewProps {
   playerName: string;
+  csrfToken: string | null;
   onBack: () => void;
 }
 
@@ -25,13 +26,21 @@ function getMessageText(msg: { parts: Array<{ type: string; text?: string }> }):
     .join("");
 }
 
-const transport = new DefaultChatTransport({
-  api: "/api/chat",
-});
+export function ChatView({ playerName, onBack, csrfToken }: ChatViewProps) {
 
-export function ChatView({ playerName, onBack }: ChatViewProps) {
+  const transport = csrfToken
+    ? new DefaultChatTransport({
+        api: "/api/chat",
+        credentials: "include",
+        headers: {
+          "Content-Type": "application/json",
+          "x-csrf-token": csrfToken,
+        },
+      })
+    : null;
+
   const { messages, sendMessage, status, error, setMessages } = useChat({
-    transport,
+    transport: transport ?? new DefaultChatTransport({ api: "/api/chat" }),
   });
 
   const [input, setInput] = useState("");
