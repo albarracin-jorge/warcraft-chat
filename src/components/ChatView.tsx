@@ -13,6 +13,7 @@ import { Input } from "@/components/ui/warcraftcn/input";
 import { Badge } from "@/components/ui/warcraftcn/badge";
 import { RACES, type Race } from "@/lib/races";
 import "@/components/ui/warcraftcn/styles/warcraft.css";
+import { Footer } from "./Footer";
 
 interface ChatViewProps {
   playerName: string;
@@ -55,7 +56,6 @@ export function ChatView({ playerName, playerRace, chatRace, onBack, csrfToken }
 
   const isLoading = status === "submitted" || status === "streaming";
 
-  // Set initial welcome message based on NPC race
   useEffect(() => {
     setMessages([
       {
@@ -97,9 +97,8 @@ export function ChatView({ playerName, playerRace, chatRace, onBack, csrfToken }
     : { bg: "bg-blue-950/40", text: "text-blue-100", border: "border-blue-800/30", accent: "text-blue-300/60" };
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen p-4 animate-in fade-in duration-500">
-      {/* Header */}
-      <div className="w-full max-w-2xl mb-4 flex items-center justify-between">
+    <div className="flex flex-col items-center justify-center min-h-screen md:p-4 animate-in fade-in duration-500">
+      <div className="w-full max-w-2xl mb-4 flex items-center justify-between px-6">
         <Button
           variant="frame"
           className="px-4 py-2 text-xs"
@@ -114,22 +113,21 @@ export function ChatView({ playerName, playerRace, chatRace, onBack, csrfToken }
             className="w-8 h-8 rounded-full border-2 border-amber-600/50 object-cover"
           />
           <Badge variant="default" size="lg" faction={player.faction}>
-            ⚔ {playerName}
+            {playerName}
           </Badge>
         </div>
       </div>
 
-      {/* Chat Card */}
       <Card className="w-full max-w-2xl flex flex-col" style={{ height: "70vh" }}>
-        <CardHeader className="pt-6 pb-2">
+        <CardHeader className="pt-6 md:pt-12 pb-2">
           <div className="flex items-center justify-center gap-3">
             <img
               src={npc.icon}
               alt={npc.name}
               className="w-10 h-10 rounded-full border-2 border-amber-600/50 object-cover"
             />
-            <CardTitle className="text-amber-200 text-center text-lg [text-shadow:0_0_10px_rgba(251,191,36,0.4)]">
-              ⚔ {npc.npcName} — {npc.npcTitle} ⚔
+            <CardTitle className="text-amber-200 text-center text-base md:text-lg [text-shadow:0_0_10px_rgba(251,191,36,0.4)] mt-6">
+              {npc.npcName} — {npc.npcTitle}
             </CardTitle>
           </div>
         </CardHeader>
@@ -137,7 +135,7 @@ export function ChatView({ playerName, playerRace, chatRace, onBack, csrfToken }
         <CardContent className="flex-1 overflow-hidden px-2">
           <div
             ref={scrollRef}
-            className="h-full overflow-y-auto pr-2 space-y-3"
+            className="h-full overflow-y-auto pr-2 space-y-3 md:px-4"
             style={{
               scrollbarWidth: "thin",
               scrollbarColor: "rgba(180,130,50,0.4) transparent",
@@ -152,7 +150,6 @@ export function ChatView({ playerName, playerRace, chatRace, onBack, csrfToken }
                   key={msg.id}
                   className={`flex items-end gap-2 ${isUser ? "justify-end" : "justify-start"}`}
                 >
-                  {/* NPC icon on the left */}
                   {!isUser && (
                     <img
                       src={npc.icon}
@@ -161,7 +158,7 @@ export function ChatView({ playerName, playerRace, chatRace, onBack, csrfToken }
                     />
                   )}
                   <div
-                    className={`max-w-[75%] rounded-lg px-4 py-3 text-sm leading-relaxed ${
+                    className={`max-w-[75%] rounded-lg px-4 py-3 text-xs md:text-sm leading-relaxed ${
                       isUser
                         ? "bg-amber-900/40 text-amber-100 border border-amber-700/30 rounded-br-none"
                         : `${factionColor.bg} ${factionColor.text} border ${factionColor.border} rounded-bl-none`
@@ -172,7 +169,6 @@ export function ChatView({ playerName, playerRace, chatRace, onBack, csrfToken }
                     </div>
                     <p className="whitespace-pre-wrap fantasy">{text}</p>
                   </div>
-                  {/* Player icon on the right */}
                   {isUser && (
                     <img
                       src={player.icon}
@@ -222,13 +218,13 @@ export function ChatView({ playerName, playerRace, chatRace, onBack, csrfToken }
         </CardContent>
 
         <CardFooter className="p-3">
-          <form onSubmit={onSubmit} className="flex w-full gap-2 items-center">
+          <form onSubmit={onSubmit} className="flex w-full gap-2 items-center pb-6 md:px-4">
             <Input
               ref={inputRef}
               value={input}
               onChange={(e) => setInput(e.target.value)}
               placeholder={`Speak to ${npc.npcName}...`}
-              className="flex-1 text-amber-100 placeholder:text-amber-700/60"
+              className="flex-1 text-center text-amber-100 placeholder:text-yellow-200/75 bg-neutral-950"
               disabled={isLoading}
               autoFocus
             />
@@ -243,6 +239,7 @@ export function ChatView({ playerName, playerRace, chatRace, onBack, csrfToken }
           </form>
         </CardFooter>
       </Card>
+    <Footer/>
     </div>
   );
 }

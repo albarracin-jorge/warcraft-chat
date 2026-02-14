@@ -1,4 +1,4 @@
-import { useState, useRef, type FormEvent } from "react";
+import { useState, useRef } from "react";
 import {
   Card,
   CardHeader,
@@ -10,6 +10,7 @@ import { Button } from "@/components/ui/warcraftcn/button";
 import { Input } from "@/components/ui/warcraftcn/input";
 import { RACE_LIST, type Race } from "@/lib/races";
 import "@/components/ui/warcraftcn/styles/warcraft.css";
+import { Footer } from "./Footer";
 
 interface WelcomeScreenProps {
   onEnter: (name: string, playerRace: Race, chatRace: Race) => void;
@@ -21,7 +22,7 @@ export function WelcomeScreen({ onEnter }: WelcomeScreenProps) {
   const [chatRace, setChatRace] = useState<Race>("orc");
   const inputRef = useRef<HTMLInputElement>(null);
 
-  const handleSubmit = (e: FormEvent) => {
+  const handleSubmit = (e: React.SyntheticEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (name.trim()) {
       onEnter(name.trim(), playerRace, chatRace);
@@ -29,11 +30,11 @@ export function WelcomeScreen({ onEnter }: WelcomeScreenProps) {
   };
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen p-4 animate-in fade-in duration-500">
+    <div className="flex flex-col items-center justify-center min-h-screen md:p-4 animate-in fade-in duration-500">
       <Card className="w-full max-w-md">
         <CardHeader className="items-center text-center pt-8">
-          <div className="text-5xl mb-2">⚔️</div>
-          <CardTitle className="text-amber-200 text-2xl [text-shadow:0_0_12px_rgba(251,191,36,0.5)]">
+          <div className="text-5xl mb-2 mx-auto"><img src='/wow.svg' alt="" /></div>
+          <CardTitle className="text-yellow-200 text-2xl [text-shadow:0_0_12px_rgba(251,191,36,0.5)]">
             Warcraft Chat
           </CardTitle>
           <CardDescription className="text-amber-100/60 mt-1">
@@ -42,11 +43,10 @@ export function WelcomeScreen({ onEnter }: WelcomeScreenProps) {
         </CardHeader>
         <CardContent className="px-6 pb-2">
           <form onSubmit={handleSubmit} className="flex flex-col gap-5">
-            {/* Name input */}
-            <div className="space-y-2">
+            <div className="space-y-2 flex flex-col justify-center">
               <label
                 htmlFor="playerName"
-                className="fantasy text-amber-200/80 text-sm block text-center"
+                className="fantasy text-yellow-200/80 text-sm block text-center"
               >
                 Enter your name, warrior
               </label>
@@ -56,14 +56,13 @@ export function WelcomeScreen({ onEnter }: WelcomeScreenProps) {
                 value={name}
                 onChange={(e) => setName(e.target.value)}
                 placeholder="Your name..."
-                className="text-center text-amber-100 placeholder:text-amber-700/50"
+                className="text-center text-amber-100 placeholder:text-yellow-200/75 bg-neutral-950"
                 autoFocus
               />
             </div>
 
-            {/* Player race selection */}
             <div className="space-y-2">
-              <label className="fantasy text-amber-200/80 text-sm block text-center">
+              <label className="fantasy text-yellow-200/80 text-sm block text-center">
                 Your avatar
               </label>
               <div className="flex justify-center gap-3">
@@ -74,8 +73,8 @@ export function WelcomeScreen({ onEnter }: WelcomeScreenProps) {
                     onClick={() => setPlayerRace(race.id)}
                     className={`relative flex flex-col items-center gap-1 p-2 rounded-lg transition-all cursor-pointer ${
                       playerRace === race.id
-                        ? "ring-2 ring-amber-400 bg-amber-900/40 scale-110"
-                        : "opacity-50 hover:opacity-80 hover:bg-amber-900/20"
+                        ? "ring-2 ring-blue-400 bg-blue-900/40 scale-110"
+                        : "opacity-50 hover:opacity-80 hover:bg-blue-900/20"
                     }`}
                   >
                     <img
@@ -83,7 +82,7 @@ export function WelcomeScreen({ onEnter }: WelcomeScreenProps) {
                       alt={race.name}
                       className="w-12 h-12 rounded-full border-2 border-amber-700/50 object-cover"
                     />
-                    <span className="fantasy text-amber-200/80 text-[10px]">
+                    <span className="fantasy text-yellow-200/80 text-[10px]">
                       {race.name}
                     </span>
                   </button>
@@ -91,9 +90,8 @@ export function WelcomeScreen({ onEnter }: WelcomeScreenProps) {
               </div>
             </div>
 
-            {/* NPC race selection */}
             <div className="space-y-2">
-              <label className="fantasy text-amber-200/80 text-sm block text-center">
+              <label className="fantasy text-yellow-200/80 text-sm block text-center">
                 Speak with
               </label>
               <div className="flex justify-center gap-3">
@@ -113,7 +111,7 @@ export function WelcomeScreen({ onEnter }: WelcomeScreenProps) {
                       alt={race.name}
                       className="w-12 h-12 rounded-full border-2 border-red-700/50 object-cover"
                     />
-                    <span className="fantasy text-amber-200/80 text-[10px]">
+                    <span className="fantasy text-yellow-200/80 text-[10px]">
                       {race.name}
                     </span>
                   </button>
@@ -124,19 +122,20 @@ export function WelcomeScreen({ onEnter }: WelcomeScreenProps) {
             <Button
               type="submit"
               variant="frame"
-              className="w-full py-4 text-base"
+              className="w-full py-4 text-sm md:text-base"
               disabled={!name.trim()}
             >
               Enter the Chat — Lok'tar!
             </Button>
           </form>
         </CardContent>
-        <div className="text-center pb-6 pt-2">
-          <p className="fantasy text-amber-700/40 text-xs">
+        <div className="text-center pb-10">
+          <p className="fantasy text-amber-200/70 text-xs">
             "Victory or Death!"
           </p>
         </div>
       </Card>
+      <Footer/>
     </div>
   );
 }
