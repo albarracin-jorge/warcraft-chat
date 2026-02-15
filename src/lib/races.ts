@@ -1,7 +1,7 @@
-import orcIcon from "@/assets/orc-icon.png";
-import humanIcon from "@/assets/human-icon.png";
-import trollIcon from "@/assets/trol-icon.png";
-import dwarfIcon from "@/assets/dwarf-icon.png";
+import orcIcon from "@/assets/orc-icon.jpg";
+import humanIcon from "@/assets/human-icon.jpg";
+import trollIcon from "@/assets/trol-icon.jpg";
+import dwarfIcon from "@/assets/dwarf-icon.jpg";
 
 export type Race = "orc" | "human" | "troll" | "dwarf";
 export type Faction = "horde" | "alliance";
