@@ -3,6 +3,7 @@ import './App.css'
 import { useEffect, useState } from 'react'
 import { WelcomeScreen } from '@/components/WelcomeScreen'
 import { ChatView } from '@/components/ChatView'
+import { LoadingScreen } from '@/components/LoadingScreen'
 import { fetchCsrfToken } from './lib/csrf'
 import type { Race } from './lib/races'
 
@@ -15,6 +16,10 @@ function App() {
   useEffect(() => {
     fetchCsrfToken().then(setCsrfToken);
   }, []);
+
+  if (!csrfToken) {
+    return <LoadingScreen />
+  }
 
   if (!playerName) {
     return (
